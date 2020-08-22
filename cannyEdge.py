@@ -14,7 +14,7 @@ def canny():
     4. Double threshold
     5. Edge Tracking by Hysteresis
     '''
-    img = cv.imread("./img/vk.jpg", 0)
+    img = cv.imread("./img/sunflower.jpg", 0)
     canny = cv.Canny(img, 150, 200)
 
     title = ["Original Image", "Canny"]
