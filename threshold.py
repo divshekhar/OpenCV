@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 
 
 def threshold():
+    # Read images
     img = cv.imread('./img/gradient.jpg')
     img2 = cv.imread('./img/sudoku.jpg')
 
