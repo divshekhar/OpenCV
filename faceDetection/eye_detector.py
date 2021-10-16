@@ -20,8 +20,7 @@ while cap.isOpened():
         eyes = eye_cascade.detectMultiScale(roi_gray)
         for (ex, ey, ew, eh) in eyes:
             cv.rectangle(img, (ex, ey), (ex+ew, ey+eh), (255, 0, 0), 3)
-
-    # Display the Image
+    #To display a image
     cv.imshow('Image', img)
     if cv.waitKey(1) & 0xFF == ord('q'):
         break
