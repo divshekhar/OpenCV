@@ -18,7 +18,7 @@ def drawShapes():
     font = cv.FONT_HERSHEY_COMPLEX
     image = cv.putText(image, "OpenCV", (10, 500), font,
                        4, (0, 255, 0), 10, cv.LINE_AA)
-
+    # show image
     cv.imshow('Shapes', image)
     cv.waitKey()
     cv.destroyAllWindows()
