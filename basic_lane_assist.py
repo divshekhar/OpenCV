@@ -2,12 +2,7 @@ import cv2 as cv
 import numpy as np
 from matplotlib import pyplot as plt
 
-
-def lanesDetection(img):
-    # img = cv.imread("./img/road.jpg")
-    # img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
-
-    # print(img.shape)
+def lanesDetectionNew(img):
     # Get the height and width of the provided video frame
     height = img.shape[0]
     width = img.shape[1]
@@ -15,8 +10,9 @@ def lanesDetection(img):
     # Set the image region on witch the lane detection should work
     #ToDo: Make this configurable
     region_of_interest_vertices = [
-        (200, height), (width/2, height/1.37), (width-300, height)
+        (200, height-1), (width/2, height/1.26), (width-400, height-1)
     ]
+
     # Convert frame to grayscale
     gray_img = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
     # Convert grayscale image to outline borders of objects
@@ -28,11 +24,10 @@ def lanesDetection(img):
     # Use OpenCVs HoughsLines line detection
     # See https://learnopencv.com/hough-transform-with-opencv-c-python/ for more Info
     lines = cv.HoughLinesP(cropped_image, rho=2, theta=np.pi/180,
-                           threshold=50, lines=np.array([]), minLineLength=10, maxLineGap=30)
+                           threshold=40, lines=np.array([]), minLineLength=25, maxLineGap=60)
     # Draw the detected Lines into the original frame
     image_with_lines = draw_lines(img, lines)
-    # plt.imshow(image_with_lines)
-    # plt.show()
+
     return image_with_lines
 
 
@@ -53,9 +48,18 @@ def draw_lines(img, lines):
     blank_image = np.zeros((img.shape[0], img.shape[1], 3), np.uint8)
 
     # Draw the found Lanes as lines onto the blank image
+    # Adds color for Lines, to see if the driver is in the middle of the lane
+    # Values are tweaked for the specific provided sample video
     for line in lines:
         for x1, y1, x2, y2 in line:
-            cv.line(blank_image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            print("x1: "+str(x1)+" y1: "+str(y1)+" x2: "+str(x2)+" y2: "+str(y2))
+            if x1 < 380:
+                rgb = (0, 255, 0)
+            elif x1 > 700:
+                rgb = (0, 255, 0)
+            else:
+                rgb = (0, 0, 255)
+            cv.line(blank_image, (x1, y1), (x2, y2), rgb, 2)
 
     # Create an image that overlays the blank image with lines onto the original frame
     img = cv.addWeighted(img, 0.8, blank_image, 1, 0.0)
@@ -69,7 +73,7 @@ def videoLanes():
         # Read one frame from the videofile
         ret, frame = cap.read()
         # Do the lane Detection
-        frame = lanesDetection(frame)
+        frame = lanesDetectionNew(frame)
         # Display the frame with drawn lanes
         cv.imshow('Lanes Detection', frame)
         # Quit program if q is pressed. cv.waitkey(1) is needed to display something with OpenCV
